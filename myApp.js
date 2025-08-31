@@ -3,9 +3,16 @@ const app = express();
 
 const helmet = require("helmet");  
 
-const PORT = process.env.PORT || 3030;
-  console.log('Useful Programmer Info Security App Started on port ${PORT}');
+app.use(helmet.hidePoweredBy());
 
+app.use(express.static('public'));
+
+app.get("/", function (req, res) {
+  res.sendFile(__dirname + '/views/index.html');
+});
+
+// Required export for FCC tests
+module.exports = app;
 
 app.use(helmet());     
 
