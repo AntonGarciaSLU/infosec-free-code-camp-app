@@ -1,8 +1,8 @@
 const express = require('express');
 const helmet = require('helmet');
+
 const app = express();
 
-// Hide "X-Powered-By" header
 app.use(helmet.hidePoweredBy());
 
 // Mitigate clickjacking
@@ -11,6 +11,9 @@ app.use(
     action: 'deny',
   })
 );
+
+// Prevent MIME type sniffing
+app.use(helmet.noSniff());
 
 app.use(helmet.xssFilter());
 
