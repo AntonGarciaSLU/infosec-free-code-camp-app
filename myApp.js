@@ -12,6 +12,8 @@ app.use(
   })
 );
 
+app.use(helmet.xssFilter());
+
 // Serve static files
 app.use(express.static('public'));
 
