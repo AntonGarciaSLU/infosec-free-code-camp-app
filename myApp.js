@@ -20,6 +20,15 @@ app.use(helmet.ieNoOpen());
 
 app.use(helmet.xssFilter());
 
+// 🔒 Force browsers to use HTTPS only (for the next 90 days)
+const ninetyDaysInSeconds = 90 * 24 * 60 * 60;
+app.use(
+  helmet.hsts({
+    maxAge: ninetyDaysInSeconds,
+    force: true,
+  })
+);
+
 // Serve static files
 app.use(express.static('public'));
 
