@@ -36,6 +36,19 @@ app.use(helmet.dnsPrefetchControl());
 app.use(helmet.noCache());
 
 
+// 🔒 Content Security Policy (CSP)
+// Only allow content from your own site ('self') by default
+// Only allow scripts from 'self' and 'trusted-cdn.com'
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "trusted-cdn.com"],
+    },
+  })
+);
+
+
 
 // Serve static files
 app.use(express.static('public'));
