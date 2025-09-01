@@ -32,6 +32,11 @@ app.use(
 // 🔒 Disable DNS prefetching for extra privacy & security
 app.use(helmet.dnsPrefetchControl());
 
+// 🔒 Disable client-side caching so users always get the latest version
+app.use(helmet.noCache());
+
+
+
 // Serve static files
 app.use(express.static('public'));
 
