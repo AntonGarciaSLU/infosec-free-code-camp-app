@@ -29,6 +29,9 @@ app.use(
   })
 );
 
+// 🔒 Disable DNS prefetching for extra privacy & security
+app.use(helmet.dnsPrefetchControl());
+
 // Serve static files
 app.use(express.static('public'));
 
