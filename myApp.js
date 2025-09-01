@@ -3,57 +3,31 @@ const helmet = require('helmet');
 
 const app = express();
 
-app.use(helmet.hidePoweredBy());
-
-// Mitigate clickjacking
-app.use(
-  helmet.frameguard({
-    action: 'deny',
-  })
-);
-
-// Prevent MIME type sniffing
-app.use(helmet.noSniff());
-
-// Prevent IE from executing downloads in site's context
-app.use(helmet.ieNoOpen());
-
-app.use(helmet.xssFilter());
-
-// 🔒 Force browsers to use HTTPS only (for the next 90 days)
+// Configure Helmet all in one place
 const ninetyDaysInSeconds = 90 * 24 * 60 * 60;
 app.use(
-  helmet.hsts({
-    maxAge: ninetyDaysInSeconds,
-    force: true,
-  })
-);
-
-// 🔒 Disable DNS prefetching for extra privacy & security
-app.use(helmet.dnsPrefetchControl());
-
-// 🔒 Disable client-side caching so users always get the latest version
-app.use(helmet.noCache());
-
-
-// 🔒 Content Security Policy (CSP)
-// Only allow content from your own site ('self') by default
-// Only allow scripts from 'self' and 'trusted-cdn.com'
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "trusted-cdn.com"],
+  helmet({
+    hidePoweredBy: true, // remove "X-Powered-By: Express"
+    frameguard: { action: 'deny' }, // block <iframe> embedding
+    noSniff: true, // prevent MIME type sniffing
+    ieNoOpen: true, // protect IE users from executing downloads
+    xssFilter: true, // legacy XSS filter
+    hsts: { maxAge: ninetyDaysInSeconds, force: true }, // enforce HTTPS for 90 days
+    dnsPrefetchControl: true, // disable DNS prefetching
+    noCache: true, // disable client-side caching
+    contentSecurityPolicy: { // configure CSP
+      directives: {
+        defaultSrc: ["'self'"], // allow only this domain by default
+        scriptSrc: ["'self'", "trusted-cdn.com"], // allow scripts from self + trusted CDN
+      },
     },
   })
 );
 
-
-
-// Serve static files
+// Serve static files (CSS, JS, images, etc.)
 app.use(express.static('public'));
 
-// Root route
+// Root route (homepage)
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html'); 
 });
